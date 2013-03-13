@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+$: << File.dirname(__FILE__) + "/../lib"
+require 'ttcalvm'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ttcalvm [-hi] [-c=file.o] file"
+
+  opts.on("-i", "inspect LLVM IR"){ options[:inspect] = true }
+  opts.on("-c=FILE", "output LLVM bytecode"){|v| options[:output] = v }
+end.parse!
+
+file = ARGV.first
+abort "Usage: ttcalvm [-hi] [-c=file.o] file" if file.nil?
+g = Ttcalvm.compile(File.read(file))
+
+case
+when options[:inspect]
+  g.dump
+when options[:output]
+  File.open(options[:output], "w") do |f|  
+    g.to_file(f)
+  end
+else
+  g.run
+end

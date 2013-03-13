@@ -1,0 +1,26 @@
+grammar Ttcalvm
+  rule expression
+    adjective
+  end
+
+  rule adjective
+    multitive ( space op:[+-] space multitive )* <Adjective>
+  end
+
+  rule multitive
+    primary ( space op:[*/%] space primary )* <Multitive>
+  end
+
+  rule primary
+    "(" space expression space ")" <Primary>
+    / number
+  end
+
+  rule number
+    [1-9] [0-9]* <Number>
+  end
+
+  rule space
+    [ \t\n\r]*
+  end
+end
